@@ -20,6 +20,8 @@ import android.util.Base64;
 
 import androidx.annotation.NonNull;
 
+import com.microsoft.identity.common.internal.broker.PackageHelper;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
