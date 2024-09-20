@@ -12,6 +12,11 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.net.Uri;
+import android.util.Base64;
 
 import androidx.annotation.NonNull;
 
@@ -173,9 +178,27 @@ public class MsalPlugin extends CordovaPlugin {
                 try {
                     String keyHashUrlFriendly = "";
                     try {
-                        keyHashUrlFriendly = URLEncoder.encode(MsalPlugin.this.keyHash, "UTF-8");
-                    } catch(UnsupportedEncodingException e) {
+                        if (MsalPlugin.this.keyHash.equals("")) {
+                            final String packageName = MsalPlugin.this.activity.getApplicationContext().getPackageName();                            
+                            final PackageInfo info = PackageHelper.getPackageInfo(MsalPlugin.this.context.getPackageManager(), packageName);
+                            Signature[] signatures = PackageHelper.getSignatures(info);
+                            for (Signature signature : signatures) {
+                                final MessageDigest messageDigest = MessageDigest.getInstance("SHA");
+                                messageDigest.update(signature.toByteArray());
+                                final String signatureHash = Base64.encodeToString(messageDigest.digest(), Base64.NO_WRAP);
+                                final Uri.Builder builder = new Uri.Builder();
+                                final Uri uri = builder.scheme("msauth")
+                                    .authority(packageName)
+                                    .appendPath(signatureHash)
+                                    .build();
+                                keyHashUrlFriendly = URLEncoder.encode(uri.toString(), "UTF-8");
+                            }
+                        } else {
+                            keyHashUrlFriendly = URLEncoder.encode(MsalPlugin.this.keyHash, "UTF-8");
+                        }
+                    } catch(Exception e) {
                         MsalPlugin.this.callbackContext.error(e.getMessage());
+                        e.printStackTrace();
                     }
                     StringBuilder authorities = new StringBuilder("    \"authorities\": [\n");
                     String data;
@@ -238,6 +261,7 @@ public class MsalPlugin extends CordovaPlugin {
                         MsalPlugin.this.callbackContext.success();
                     } catch (JSONException ignored) {}
                 } catch (InterruptedException | MsalException e) {
+                    MsalPlugin.this.callbackContext.error(e.getMessage());
                     e.printStackTrace();
                 }
             }
