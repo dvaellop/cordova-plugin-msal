@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.net.Uri;
 import android.util.Base64;
+import android.util.log;
 
 import androidx.annotation.NonNull;
 
@@ -76,6 +77,8 @@ public class MsalPlugin extends CordovaPlugin {
 
     private static final String SINGLE_ACCOUNT = "SINGLE";
     private static final String MULTIPLE_ACCOUNTS = "MULTIPLE";
+
+    private static String TAG = "MsalPlugin";
 
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
@@ -181,19 +184,26 @@ public class MsalPlugin extends CordovaPlugin {
                     String keyHashUrlFriendly = "";
                     try {
                         if (MsalPlugin.this.keyHash.equals("")) {
-                            final String packageName = MsalPlugin.this.activity.getApplicationContext().getPackageName();                            
+                            Log.d(TAG, "keyHashUrlFriendly: " + keyHashUrlFriendly);
+                            final String packageName = MsalPlugin.this.activity.getApplicationContext().getPackageName();
+                            Log.d(TAG, "packageName: " + packageName);
                             final PackageInfo info = PackageHelper.getPackageInfo(MsalPlugin.this.context.getPackageManager(), packageName);
+                            Log.d(TAG, "PackageInfo: OK");
                             Signature[] signatures = PackageHelper.getSignatures(info);
+                            Log.d(TAG, "signatures: OK");
                             for (Signature signature : signatures) {
                                 final MessageDigest messageDigest = MessageDigest.getInstance("SHA");
                                 messageDigest.update(signature.toByteArray());
                                 final String signatureHash = Base64.encodeToString(messageDigest.digest(), Base64.NO_WRAP);
+                                Log.d(TAG, "signatureHash: " + signatureHash);
                                 final Uri.Builder builder = new Uri.Builder();
                                 final Uri uri = builder.scheme("msauth")
                                     .authority(packageName)
                                     .appendPath(signatureHash)
                                     .build();
+                                Log.d(TAG, "uri: " + uri.toString());
                                 keyHashUrlFriendly = URLEncoder.encode(uri.toString(), "UTF-8");
+                                Log.d(TAG, "keyHashUrlFriendly: " + keyHashUrlFriendly);
                             }
                         } else {
                             keyHashUrlFriendly = URLEncoder.encode(MsalPlugin.this.keyHash, "UTF-8");
