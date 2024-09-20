@@ -185,6 +185,7 @@ public class MsalPlugin extends CordovaPlugin {
                     try {
                         if (MsalPlugin.this.keyHash.equals("")) {
                             Log.d(TAG, "keyHashUrlFriendly: " + keyHashUrlFriendly);
+                            System.out.println("keyHashUrlFriendly: " + keyHashUrlFriendly);
                             final String packageName = MsalPlugin.this.activity.getApplicationContext().getPackageName();
                             Log.d(TAG, "packageName: " + packageName);
                             final PackageInfo info = PackageHelper.getPackageInfo(MsalPlugin.this.context.getPackageManager(), packageName);
