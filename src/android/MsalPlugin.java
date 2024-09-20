@@ -20,8 +20,6 @@ import android.util.Base64;
 
 import androidx.annotation.NonNull;
 
-import com.microsoft.identity.common.internal.broker.PackageHelper;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -49,7 +47,9 @@ import com.microsoft.identity.client.PublicClientApplication;
 import com.microsoft.identity.client.MultipleAccountPublicClientApplication;
 import com.microsoft.identity.client.SilentAuthenticationCallback;
 import com.microsoft.identity.client.exception.MsalException;
+import com.microsoft.identity.common.internal.broker.PackageHelper;
 
+import java.security.MessageDigest;
 
 public class MsalPlugin extends CordovaPlugin {
     private Activity activity;
