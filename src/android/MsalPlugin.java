@@ -17,7 +17,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.net.Uri;
 import android.util.Base64;
-import android.util.log;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
