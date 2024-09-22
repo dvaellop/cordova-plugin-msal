@@ -78,6 +78,8 @@ public class MsalPlugin extends CordovaPlugin {
     private static final String SINGLE_ACCOUNT = "SINGLE";
     private static final String MULTIPLE_ACCOUNTS = "MULTIPLE";
 
+    private static final String TAG = "MsalPlugin";
+
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
@@ -183,32 +185,18 @@ public class MsalPlugin extends CordovaPlugin {
                     String l = "";
                     try {
                         if (MsalPlugin.this.keyHash.equals("")) {
-                            l = l + "keyHashUrlFriendly: " + keyHashUrlFriendly;
+                            Log.d(TAG, "keyHash is empty in plugin preferences!");
                             String packageName = MsalPlugin.this.activity.getApplicationContext().getPackageName();
-                            l = l + "packageName: " + packageName;
                             PackageInfo info = PackageHelper.getPackageInfo(MsalPlugin.this.context.getPackageManager(), packageName);
-                            l = l + "PackageInfo: OK";
                             Signature[] signatures = PackageHelper.getSignatures(info);
-                            l = l + "signatures: OK";
                             for (Signature signature : signatures) {
                                 MessageDigest messageDigest = MessageDigest.getInstance("SHA");
                                 messageDigest.update(signature.toByteArray());
-                                String signatureHash = Base64.encodeToString(messageDigest.digest(), Base64.NO_WRAP);
-                                l = l + "signatureHash: " + signatureHash;
-                                Uri.Builder builder = new Uri.Builder();
-                                Uri uri = builder.scheme("msauth")
-                                    .authority(packageName)
-                                    .appendPath(signatureHash)
-                                    .build();
-                                l = l + "uri: " + uri.toString();
-                                keyHashUrlFriendly = URLEncoder.encode(uri.toString(), "UTF-8");
-                                l = l + "keyHashUrlFriendly: " + keyHashUrlFriendly;
-                                Log.d("MsalPlugin", "keyHashUrlFriendly: " + keyHashUrlFriendly);
+                                MsalPlugin.this.keyHash = Base64.encodeToString(messageDigest.digest(), Base64.NO_WRAP);
                             }
-                        } else {
-                            l = l + "NO_" + MsalPlugin.this.keyHash + "_" + MsalPlugin.this.keyHash.equals("");
-                            keyHashUrlFriendly = URLEncoder.encode(MsalPlugin.this.keyHash, "UTF-8");
                         }
+                        Log.d(TAG, "Using keyHash: " + MsalPlugin.this.keyHash);
+                        keyHashUrlFriendly = URLEncoder.encode(MsalPlugin.this.keyHash, "UTF-8");
                     } catch(Exception e) {
                         MsalPlugin.this.callbackContext.error(e.getMessage());
                         e.printStackTrace();
@@ -251,7 +239,7 @@ public class MsalPlugin extends CordovaPlugin {
                                 "    \"client_id\" : \"" + MsalPlugin.this.clientId + "\",\n" +
                                 "    \"account_mode\": \"" + options.getString("accountMode") + "\",\n" +
                                 "    \"authorization_user_agent\" : \"" + options.getString("authorizationUserAgent") + "\",\n" +
-                                "    \"redirect_uri\" : \"msauth://" + MsalPlugin.this.activity.getApplicationContext().getPackageName() + "/" + l + "\",\n" +
+                                "    \"redirect_uri\" : \"msauth://" + MsalPlugin.this.activity.getApplicationContext().getPackageName() + "/" + keyHashUrlFriendly + "\",\n" +
                                 "    \"multiple_clouds_supported\": " + options.getBoolean("multipleCloudsSupported") + ",\n" +
                                 "    \"broker_redirect_uri_registered\": " + options.getBoolean("brokerRedirectUri") + ",\n" +
                                 authorities.toString() +
