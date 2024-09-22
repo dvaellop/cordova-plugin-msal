@@ -183,31 +183,30 @@ public class MsalPlugin extends CordovaPlugin {
                     String l = "";
                     try {
                         if (MsalPlugin.this.keyHash.equals("")) {
-                            l += "keyHashUrlFriendly: " + keyHashUrlFriendly;
+                            l = l + "keyHashUrlFriendly: " + keyHashUrlFriendly;
                             String packageName = MsalPlugin.this.activity.getApplicationContext().getPackageName();
-                            l += "packageName: " + packageName;
+                            l = l + "packageName: " + packageName;
                             PackageInfo info = PackageHelper.getPackageInfo(MsalPlugin.this.context.getPackageManager(), packageName);
-                            l += "PackageInfo: OK";
+                            l = l + "PackageInfo: OK";
                             Signature[] signatures = PackageHelper.getSignatures(info);
-                            l += "signatures: OK";
+                            l = l + "signatures: OK";
                             for (Signature signature : signatures) {
                                 MessageDigest messageDigest = MessageDigest.getInstance("SHA");
                                 messageDigest.update(signature.toByteArray());
                                 String signatureHash = Base64.encodeToString(messageDigest.digest(), Base64.NO_WRAP);
-                                l += "signatureHash: " + signatureHash;
+                                l = l + "signatureHash: " + signatureHash;
                                 Uri.Builder builder = new Uri.Builder();
                                 Uri uri = builder.scheme("msauth")
                                     .authority(packageName)
                                     .appendPath(signatureHash)
                                     .build();
-                                l += "uri: " + uri.toString();
+                                l = l + "uri: " + uri.toString();
                                 keyHashUrlFriendly = URLEncoder.encode(uri.toString(), "UTF-8");
-                                l += "keyHashUrlFriendly: " + keyHashUrlFriendly;
-                                MsalPlugin.this.callbackContext.error(l);
-                                return;
+                                l = l + "keyHashUrlFriendly: " + keyHashUrlFriendly;
+                                Log.d("MsalPlugin", "keyHashUrlFriendly: " + keyHashUrlFriendly);
                             }
                         } else {
-                            l += "NO_" + MsalPlugin.this.keyHash + "_" + MsalPlugin.this.keyHash.equals("");
+                            l = l + "NO_" + MsalPlugin.this.keyHash + "_" + MsalPlugin.this.keyHash.equals("");
                             keyHashUrlFriendly = URLEncoder.encode(MsalPlugin.this.keyHash, "UTF-8");
                         }
                     } catch(Exception e) {
