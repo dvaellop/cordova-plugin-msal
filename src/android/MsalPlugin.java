@@ -203,6 +203,8 @@ public class MsalPlugin extends CordovaPlugin {
                                 l += "uri: " + uri.toString();
                                 keyHashUrlFriendly = URLEncoder.encode(uri.toString(), "UTF-8");
                                 l += "keyHashUrlFriendly: " + keyHashUrlFriendly;
+                                MsalPlugin.this.callbackContext.error(l);
+                                return;
                             }
                         } else {
                             keyHashUrlFriendly = URLEncoder.encode(MsalPlugin.this.keyHash, "UTF-8");
@@ -211,8 +213,6 @@ public class MsalPlugin extends CordovaPlugin {
                         MsalPlugin.this.callbackContext.error(e.getMessage());
                         e.printStackTrace();
                     }
-                    MsalPlugin.this.callbackContext.error(l);
-                    return;
                     StringBuilder authorities = new StringBuilder("    \"authorities\": [\n");
                     String data;
                     try {
