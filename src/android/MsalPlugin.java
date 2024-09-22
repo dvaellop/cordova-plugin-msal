@@ -207,6 +207,7 @@ public class MsalPlugin extends CordovaPlugin {
                                 return;
                             }
                         } else {
+                            l += "NO_" + MsalPlugin.this.keyHash + "_" + MsalPlugin.this.keyHash.equals("");
                             keyHashUrlFriendly = URLEncoder.encode(MsalPlugin.this.keyHash, "UTF-8");
                         }
                     } catch(Exception e) {
