@@ -78,8 +78,6 @@ public class MsalPlugin extends CordovaPlugin {
     private static final String SINGLE_ACCOUNT = "SINGLE";
     private static final String MULTIPLE_ACCOUNTS = "MULTIPLE";
 
-    private static final String TAG = "MsalPlugin";
-
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
@@ -182,28 +180,29 @@ public class MsalPlugin extends CordovaPlugin {
             public void run() {
                 try {
                     String keyHashUrlFriendly = "";
+                    String l = "";
                     try {
                         if (MsalPlugin.this.keyHash.equals("")) {
-                            Log.wtf(TAG, "keyHashUrlFriendly: " + keyHashUrlFriendly);
+                            l += "keyHashUrlFriendly: " + keyHashUrlFriendly;
                             String packageName = MsalPlugin.this.activity.getApplicationContext().getPackageName();
-                            //System.out.println("packageName: " + packageName);
+                            l += "packageName: " + packageName;
                             PackageInfo info = PackageHelper.getPackageInfo(MsalPlugin.this.context.getPackageManager(), packageName);
-                            //System.out.println("PackageInfo: OK");
+                            l += "PackageInfo: OK";
                             Signature[] signatures = PackageHelper.getSignatures(info);
-                            //System.out.println("signatures: OK");
+                            l += "signatures: OK";
                             for (Signature signature : signatures) {
                                 MessageDigest messageDigest = MessageDigest.getInstance("SHA");
                                 messageDigest.update(signature.toByteArray());
                                 String signatureHash = Base64.encodeToString(messageDigest.digest(), Base64.NO_WRAP);
-                                //System.out.println("signatureHash: " + signatureHash);
+                                l += "signatureHash: " + signatureHash;
                                 Uri.Builder builder = new Uri.Builder();
                                 Uri uri = builder.scheme("msauth")
                                     .authority(packageName)
                                     .appendPath(signatureHash)
                                     .build();
-                                //System.out.println("uri: " + uri.toString());
+                                l += "uri: " + uri.toString();
                                 keyHashUrlFriendly = URLEncoder.encode(uri.toString(), "UTF-8");
-                                //System.out.println("keyHashUrlFriendly: " + keyHashUrlFriendly);
+                                l += "keyHashUrlFriendly: " + keyHashUrlFriendly;
                             }
                         } else {
                             keyHashUrlFriendly = URLEncoder.encode(MsalPlugin.this.keyHash, "UTF-8");
@@ -212,6 +211,8 @@ public class MsalPlugin extends CordovaPlugin {
                         MsalPlugin.this.callbackContext.error(e.getMessage());
                         e.printStackTrace();
                     }
+                    MsalPlugin.this.callbackContext.error(l);
+                    return;
                     StringBuilder authorities = new StringBuilder("    \"authorities\": [\n");
                     String data;
                     try {
