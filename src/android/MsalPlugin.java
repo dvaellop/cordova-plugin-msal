@@ -190,7 +190,7 @@ public class MsalPlugin extends CordovaPlugin {
                             Signature[] signatures = PackageHelper.getSignatures(info);
                             if (signatures.length > 0) { // only the first signature
                                 MessageDigest messageDigest = MessageDigest.getInstance("SHA");
-                                messageDigest.update(signature[0].toByteArray());
+                                messageDigest.update(signatures[0].toByteArray());
                                 MsalPlugin.this.keyHash = Base64.encodeToString(messageDigest.digest(), Base64.NO_WRAP);
                             }
                         }
