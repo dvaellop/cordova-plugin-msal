@@ -15,7 +15,6 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
-import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
@@ -189,9 +188,9 @@ public class MsalPlugin extends CordovaPlugin {
                             String packageName = MsalPlugin.this.activity.getApplicationContext().getPackageName();
                             PackageInfo info = PackageHelper.getPackageInfo(MsalPlugin.this.context.getPackageManager(), packageName);
                             Signature[] signatures = PackageHelper.getSignatures(info);
-                            for (Signature signature : signatures) {
+                            if (signatures.length > 0) { // only the first signature
                                 MessageDigest messageDigest = MessageDigest.getInstance("SHA");
-                                messageDigest.update(signature.toByteArray());
+                                messageDigest.update(signature[0].toByteArray());
                                 MsalPlugin.this.keyHash = Base64.encodeToString(messageDigest.digest(), Base64.NO_WRAP);
                             }
                         }
