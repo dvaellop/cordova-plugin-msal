@@ -277,6 +277,7 @@ public class MsalPlugin extends CordovaPlugin {
             // Set up the logger with the options we want
             Logger.getInstance().setEnablePII(showPII);
             Logger.getInstance().setLogLevel(logLevel);
+            Logger.getInstance().setEnableLogcatLog(true);
             Logger.getInstance().setExternalLogger(new ILoggerCallback() {
                 @Override
                 public void log(String tag, Logger.LogLevel logLevel, String message, boolean containsPII) {
