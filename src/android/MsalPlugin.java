@@ -241,9 +241,6 @@ public class MsalPlugin extends CordovaPlugin {
                                 "    \"redirect_uri\" : \"msauth://" + MsalPlugin.this.activity.getApplicationContext().getPackageName() + "/" + keyHashUrlFriendly + "\",\n" +
                                 "    \"multiple_clouds_supported\": " + options.getBoolean("multipleCloudsSupported") + ",\n" +
                                 "    \"broker_redirect_uri_registered\": " + options.getBoolean("brokerRedirectUri") + ",\n" +
-                                "    \"http\": {\n" +
-                                "         \"read_timeout\": 1000\n" +
-                                "    },\n" +
                                 authorities.toString() +
                                 "  }";
                         File config = createConfigFile(data);
