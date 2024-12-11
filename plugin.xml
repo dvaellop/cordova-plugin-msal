@@ -17,7 +17,7 @@
     <js-module src="www/msalplugin.js" name="msalPlugin">
         <clobbers target="cordova.plugins.msalPlugin" />
     </js-module>
-    <preference name="KEY_HASH" default="not-provided" />
+    <preference name="KEY_HASH" default="" />
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="MsalPlugin">
@@ -88,7 +88,7 @@
             <config>
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
-            <pods use_frameworks="true">
+            <pods use_frameworks="false">
                 <pod name="MSAL" />
             </pods>
         </podspec>
