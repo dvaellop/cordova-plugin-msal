@@ -14,8 +14,8 @@
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-    return [MSALPublicClientApplication handleMSALResponse:url
-                                         sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]];
+    // check if it should delegate to the library or to `CDVAppDelegate`
+    return [super application:app openURL:url options:options];
 }
 
 @end
