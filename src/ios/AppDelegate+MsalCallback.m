@@ -14,11 +14,11 @@
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-    // gets the passed url's `urlScheme`
+    // gets the passed url's urlScheme
     NSString *currentUrlScheme = [url.absoluteString componentsSeparatedByString:@"://"].firstObject;
     
     // check if it should delegate to the library or to `CDVAppDelegate`
-    return [currentUrlScheme hasPrefix:@"msal."] ? [MSALPublicClientApplication handleMSALResponse:url sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]] : [super application:app openURL:url options:options];
+    return [currentUrlScheme hasPrefix:@"msauth."] ? [MSALPublicClientApplication handleMSALResponse:url sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]] : [super application:app openURL:url options:options];
 }
 
 @end
