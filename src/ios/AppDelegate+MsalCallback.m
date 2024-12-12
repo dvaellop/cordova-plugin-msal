@@ -17,8 +17,9 @@
     // gets the passed url's urlScheme
     NSString *currentUrlScheme = [url.absoluteString componentsSeparatedByString:@"://"].firstObject;
     NSString *prefix = [currentUrlScheme componentsSeparatedByString:@"."].firstObject;
+    
     // check if it should delegate to the library or to `CDVAppDelegate`
-    return [prefix compare:@"msauth"] ? 
+    return [prefix isEqualToString:@"msauth"] ? 
                 [MSALPublicClientApplication handleMSALResponse:url sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]] : 
                 [super application:app openURL:url options:options];
 }
